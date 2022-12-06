@@ -1,31 +1,17 @@
-pub struct GroupingIterator<T, F: Fn(&T) -> bool, I: Iterator<Item = T>> {
-    iter: I,
-    cond: F,
-    buf: Vec<T>,
-}
+mod grouping_iterator;
 
-impl<T, F: Fn(&T) -> bool, I: Iterator<Item = T>> GroupingIterator<T, F, I> {
-    pub fn new(iter: I, cond: F) -> Self {
-        Self {
-            iter,
-            cond,
-            buf: vec![]
-        }
-    }
-}
+use std::{
+    fs::File,
+    io::{BufRead, BufReader},
+};
 
-impl<T, F: Fn(&T) -> bool, I: Iterator<Item = T>> Iterator for GroupingIterator<T, F, I> {
-    type Item = Vec<T>;
+pub use grouping_iterator::GroupingIterator;
 
-    fn next(&mut self) -> Option<Self::Item> {
-        loop {
-            let x = self.iter.next()?;
-            let split = (self.cond)(&x);
-            
-            self.buf.push(x);
-            if split {
-                return Some(std::mem::take(&mut self.buf));
-            }
-        }
-    }
+pub fn line_by_line(path: impl AsRef<str>) -> impl Iterator<Item = String> {
+    let file = File::open(path.as_ref()).unwrap();
+
+    BufReader::new(file)
+        // For each line in the file
+        .lines()
+        .map(|x| x.unwrap())
 }

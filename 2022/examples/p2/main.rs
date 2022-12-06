@@ -1,25 +1,17 @@
-use std::{
-    fs::File,
-    io::{BufRead, BufReader},
-};
+use aoc_2022::line_by_line;
 
 fn main() {
-    let file = File::open("./examples/p2/rps.txt").unwrap();
-
     // Part 1
-    let score = BufReader::new(file)
-        // For each line in the file
-        .lines()
-        .map(|x| x.unwrap())
-        .fold(0, |score, x| {
-            let mut spl = x.split(' ');
-            let opp = spl.next().unwrap();
-            let us = spl.next().unwrap();
+    let score = line_by_line("./examples/p2/rps.txt").fold(0, |score, x| {
+        let mut spl = x.split(' ');
+        let opp = spl.next().unwrap();
+        let us = spl.next().unwrap();
 
-            // A, X = Rock
-            // B, Y = Paper
-            // C, Z = Scissors
-            score + match (opp, us) {
+        // A, X = Rock
+        // B, Y = Paper
+        // C, Z = Scissors
+        score
+            + match (opp, us) {
                 ("A", "X") => 1 + 3,
                 ("A", "Y") => 2 + 6,
                 ("A", "Z") => 3 + 0,
@@ -31,26 +23,21 @@ fn main() {
                 ("C", "Z") => 3 + 3,
                 _ => unreachable!(),
             }
-        });
+    });
 
     println!("{}", score);
 
     // Part 2
-    let file = File::open("./examples/p2/rps.txt").unwrap();
+    let score = line_by_line("./examples/p2/rps.txt").fold(0, |score, x| {
+        let mut spl = x.split(' ');
+        let opp = spl.next().unwrap();
+        let us = spl.next().unwrap();
 
-    let score = BufReader::new(file)
-        // For each line in the file
-        .lines()
-        .map(|x| x.unwrap())
-        .fold(0, |score, x| {
-            let mut spl = x.split(' ');
-            let opp = spl.next().unwrap();
-            let us = spl.next().unwrap();
-
-            // A, X = Rock
-            // B, Y = Paper
-            // C, Z = Scissors
-            score + match (opp, us) {
+        // A, X = Rock
+        // B, Y = Paper
+        // C, Z = Scissors
+        score
+            + match (opp, us) {
                 ("A", "X") => 3 + 0,
                 ("A", "Y") => 1 + 3,
                 ("A", "Z") => 2 + 6,
@@ -62,6 +49,6 @@ fn main() {
                 ("C", "Z") => 1 + 6,
                 _ => unreachable!(),
             }
-        });
+    });
     println!("{}", score);
 }

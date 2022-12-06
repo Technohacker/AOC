@@ -1,27 +1,16 @@
-use std::{
-    fs::File,
-    io::{BufRead, BufReader}, collections::BinaryHeap,
-};
+use std::collections::BinaryHeap;
 
-use aoc_2022::GroupingIterator;
+use aoc_2022::{line_by_line, GroupingIterator};
 
 fn main() {
-    let file = File::open("./examples/p1/calorie.txt").unwrap();
-
-    let lines = BufReader::new(file)
-        // For each line in the file
-        .lines()
-        .map(|x| x.unwrap());
+    let lines = line_by_line("./examples/p1/calorie.txt");
 
     // Group together
     let groups = GroupingIterator::new(lines, |x| x.is_empty());
 
     // Make a priority queue
     let mut queue = groups
-        .map(|x| x.iter()
-            .filter_map(|x| x.parse::<u32>().ok())
-            .sum::<u32>()
-        )
+        .map(|x| x.iter().filter_map(|x| x.parse::<u32>().ok()).sum::<u32>())
         .collect::<BinaryHeap<_>>();
 
     // For part 1

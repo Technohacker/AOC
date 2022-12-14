@@ -19,12 +19,21 @@ impl<T, F: Fn(&T) -> bool, I: Iterator<Item = T>> Iterator for GroupingIterator<
 
     fn next(&mut self) -> Option<Self::Item> {
         loop {
-            let x = self.iter.next()?;
-            let split = (self.cond)(&x);
-
-            self.buf.push(x);
-            if split {
-                return Some(std::mem::take(&mut self.buf));
+            match self.iter.next() {
+                Some(x) => {
+                    let split = (self.cond)(&x);
+        
+                    self.buf.push(x);
+                    if split {
+                        return Some(std::mem::take(&mut self.buf));
+                    }
+                },
+                None => {
+                    if self.buf.is_empty() {
+                        return None;
+                    }
+                    return Some(std::mem::take(&mut self.buf));
+                },
             }
         }
     }
